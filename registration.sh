@@ -1,4 +1,4 @@
-#1/bin/bash
+#!/bin/bash
 
 # Uncomment below if you need run-to-run reproducibility
 # Might not produce identical results on different systems
@@ -10,6 +10,9 @@ if ! command -v antsRegistration > /dev/null; then
   echo "Error: antsRegistration not found on PATH"
   exit 1
 fi
+
+echo "ANTs executables found on PATH: $(command -v antsRegistration)"
+echo "ANTs version: $(antsRegistration --version | head -n 1)"
 
 # function do_registration(fixed, moving, output_root)
 do_intersubject_registration() {
