@@ -312,5 +312,19 @@ antsApplyTransforms -d 3 --verbose --float \
 assert_images_same ${output_dir}/mni_t1w_composed_linear.nii.gz ${output_dir}/mni_t1w_collapsed_linear.nii.gz 1e-6
 
 
+# MINC
+antsApplyTransforms -d 3 --verbose --float \
+    -o CompositeTransform[ ${output_dir}/mni_to_adni_minc.xfm ] \
+    -t reference_transforms/mni_to_adni_Composite.h5
+
+antsApplyTransforms -d 3 --verbose --float \
+    -o ${output_dir}/mni_adni_minc.nii.gz \
+    -r reference_images/adni.nii.gz \
+    -t ${output_dir}/mni_to_adni_minc.xfm \
+    -i reference_images/mni.nii.gz
+
+assert_images_same ${output_dir}/mni_adni_ref.nii.gz ${output_dir}/mni_adni_minc.nii.gz 1e-6
+
+
 echo "All tests passed"
 exit 0
