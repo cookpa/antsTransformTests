@@ -14,6 +14,8 @@ fi
 echo "ANTs executables found on PATH: $(command -v antsRegistration)"
 echo "ANTs version: $(antsRegistration --version | head -n 1)"
 
+mkdir -p reference_transforms
+
 # function do_registration(fixed, moving, output_root)
 do_intersubject_registration() {
   fixed=$1
@@ -22,12 +24,11 @@ do_intersubject_registration() {
   moving_mask=$4
   output_root=$5
 
-  # register T1w to ADNI
   antsRegistration -d 3 -r [ "$fixed", "$moving", 1 ] \
     -x [ "$fixed_mask", "$moving_mask"] \
     -t Rigid[0.1] -m Mattes[ "$fixed", "$moving", 1, 32 ] -c [ 100x100x0, 1e-6, 10 ] -s 2x1x0vox -f 4x3x1 \
     -t Affine[0.1] -m Mattes[ "$fixed", "$moving", 1, 32 ] -c [ 500x500x50, 1e-6, 10 ] -s 2x1x1vox -f 4x2x1 \
-    -t SyN[0.2,3,0] -m CC[ "$fixed", "$moving", 1, 2 ] -c [ 100x50x50x20, 1e-6, 10 ] -s 3x2x1x0vox -f 4x3x2x1 \
+    -t SyN[0.2,3,0.5] -m CC[ "$fixed", "$moving", 1, 2 ] -c [ 100x50x50x20, 1e-6, 10 ] -s 3x2x1x0vox -f 4x3x2x1 \
     --write-composite-transform 1 \
     -o $output_root \
     --verbose \
