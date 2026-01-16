@@ -24,7 +24,7 @@ assert_images_same() {
     fi
 }
 
-output_dir=test_transforms
+output_dir=test_composite_transforms
 
 if [ ! -d ${output_dir} ]; then
     mkdir -p ${output_dir}

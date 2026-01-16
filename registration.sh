@@ -16,7 +16,6 @@ echo "ANTs version: $(antsRegistration --version | head -n 1)"
 
 mkdir -p reference_transforms
 
-# function do_registration(fixed, moving, output_root)
 do_intersubject_registration() {
   fixed=$1
   moving=$2
@@ -25,16 +24,14 @@ do_intersubject_registration() {
   output_root=$5
 
   antsRegistration -d 3 -r [ "$fixed", "$moving", 1 ] \
-    -x [ "$fixed_mask", "$moving_mask"] \
+    -x [ "$fixed_mask", "$moving_mask" ] \
     -t Rigid[0.1] -m Mattes[ "$fixed", "$moving", 1, 32 ] -c [ 100x100x0, 1e-6, 10 ] -s 2x1x0vox -f 4x3x1 \
     -t Affine[0.1] -m Mattes[ "$fixed", "$moving", 1, 32 ] -c [ 500x500x50, 1e-6, 10 ] -s 2x1x1vox -f 4x2x1 \
     -t SyN[0.2,3,0.5] -m CC[ "$fixed", "$moving", 1, 2 ] -c [ 100x50x50x20, 1e-6, 10 ] -s 3x2x1x0vox -f 4x3x2x1 \
     --write-composite-transform 1 \
-    -o $output_root \
+    -o [ "$output_root", "${output_root}deformed.nii.gz" ] \
     --verbose \
     && ants_success=1 || ants_success=0
-
-
 
   return $ants_success
 }
