@@ -98,6 +98,22 @@ antsApplyTransforms -d 3 --verbose --float \
     -t reference_transforms/t1w_to_adni_Composite.h5 \
     -i reference_images/t1w.nii.gz
 
+# Compose two composite transforms with antsApplyTransforms - mni to adni to t1w
+antsApplyTransforms -d 3 --verbose --float \
+    -o CompositeTransform[ ${output_dir}/mni_to_t1w_composite.h5 ] \
+    -r reference_images/t1w.nii.gz \
+    -t reference_transforms/t1w_to_adni_InverseComposite.h5 \
+    -t reference_transforms/mni_to_adni_Composite.h5 \
+    -i reference_images/mni.nii.gz
+
+# Apply and check similarity
+antsApplyTransforms -d 3 --verbose --float \
+    -o ${output_dir}/mni_t1w_h5comp.nii.gz \
+    -r reference_images/t1w.nii.gz \
+    -t ${output_dir}/mni_to_t1w_composite.h5 \
+    -i reference_images/mni.nii.gz
+
+assert_images_same ${output_dir}/mni_t1w_ref_ref.nii.gz ${output_dir}/mni_t1w_h5comp.nii.gz 1e-6
 
 # Now disassemble the composite transforms and apply them
 
